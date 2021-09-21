@@ -1,0 +1,31 @@
+h1,h2 {
+    font-family: "Oswald", sans-serif;
+  }
+
+  ul {
+    list-style-type: none;
+    margin: 0;
+    padding: 0;
+  }
+  
+  li {
+    display: inline;
+  }
+  
+  #navbar a {
+    margin-left: 75px;
+    margin-right: 75px;
+  }
+
+body {
+    font-family: "Open Sans", sans-serif;
+    color: yellow;
+    margin-top: 10px;
+    margin-bottom: 10px;
+    margin-left: 50px;
+    margin-right: 50px;
+    width: 950px;
+    background-color: black;
+  }
+
+
