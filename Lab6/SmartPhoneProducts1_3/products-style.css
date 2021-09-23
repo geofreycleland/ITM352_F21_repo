@@ -42,3 +42,12 @@ div {
     transform: rotate(359deg);
   }
 }
+
+header {
+    border: 5px solid black; 
+    border-bottom: 0px;
+}
+
+footer {
+  border: 5px solid black;
+}
