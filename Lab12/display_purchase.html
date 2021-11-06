@@ -12,8 +12,14 @@
 
         //Check if the textbox exsists
         if (params.has('qty_textbox')) {
-            document.body.innerHTML = `Thank you for ordering ${params.get('qty_textbox')} things!`;
-        }
+    if (isNonNegativeInteger(params.get('qty_textbox'))){
+        document.body.innerHTML = `Thank you for ordering ${params.get('qty_textbox')} things!`;
+    } else {
+        document.body.innerHTML = `Invallid quantity bozo - press back and try again`;
+    }
+    
+}
+        
     </script>
 </body>
 </html>
