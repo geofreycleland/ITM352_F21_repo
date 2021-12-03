@@ -1,0 +1,106 @@
+<script src="./products.js"></script>
+<script>
+    function isNonNegInt(q, returnErrors=false) {
+    errors = []; // assume no errors at first
+    if(q == ""){
+       q = 0;
+    }
+    if(Number(q) != q) errors.push('Not a number!'); // Check if string is a number value
+    if(q < 0) errors.push('Negative value!'); // Check if it is non-negative
+    if(parseInt(q) != q) errors.push('Not an integer!'); // Check that it is an integer
+    return returnErrors ? errors : (errors.length == 0);
+}
+function checkQuantityTextbox(theTextbox) {
+        errs = isNonNegInt(theTextbox.value, true);
+        if (errs.length == 0) errs = ['You want:'];
+        if (theTextbox.value.trim() == '') errs = ['Quantity'];
+        document.getElementById(theTextbox.name + '_label').innerHTML = errs.join(", ");
+    }
+    
+window.onload = function () {
+    // get the query string which has the form data
+    var params = (new URL(document.location)).searchParams; 
+        //overide the login, and get into the invoice
+        if(params.has('purchased')){
+            display_invoice();
+        }
+        
+        // form was submitted so check that quantities are valid then redirect to invoice if ok.
+        if (params.has('purchase_submit')) {
+            has_errors = false; // assume quantities are valid from the start
+            total_qty = 0; // need to check if something was selected so we will look if the total > 0
+            for (let i in products) {
+                if (params.has(`quantity${i}`)) {
+                    a_qty = params.get(`quantity${i}`);
+                    // make textboxes sticky in case of invalid data
+                    product_selection_form[`quantity${i}`].value = a_qty;
+                    total_qty += a_qty; 
+                    if(!isNonNegInt(a_qty)) {
+                        has_errors = true; // oops, invalid quantity
+                        checkQuantityTextbox(product_selection_form[`quantity${i}`]); // show where the error is
+                    }
+                }
+            }
+            // Now respond to errors or redirect to invoice if all is ok
+            if(has_errors) {
+                alert("Please enter only valid quantities!");
+            } else if(total_qty == 0) { // no quantity selections, just give a general alert
+                alert("Please select some quantities!");
+            } else { // all good to go! sent to login 
+                location.href = "./login.html" + location.search;
+                window.stop;
+            }
+        }
+    }
+</script>
+
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <title>Kitchen Knife Store</title>
+
+    <link href="https://fonts.googleapis.com/css?family=Cherry+Swash|Raleway" rel="stylesheet">
+
+    <link href="products-style.css" rel="stylesheet">
+</head>
+<body>
+    <header>
+        <h1>Kitchen Knife Sets Store</h1>
+    </header>
+        
+        <form action="" name="product_selection_form" method="GET">
+   <div> 
+      <main>
+            <script>
+                for(let i in products){
+                document.write(`
+            <section class="item">
+                <h2>${products[i].model}</h2>
+                <p>$${products[i].price}</p>
+                <img src="${products[i].image}">
+                
+                <label id="quantity${i}_label"}">Quantity</label>
+                <input type="text" placeholder="0" name="quantity${i}" onkeyup="checkQuantityTextbox(this);" >
+            </section>`);
+                
+        }
+            </script>
+        </main>
+       
+    </div>
+    <center><input type="submit" value="purchase" name="purchase_submit">
+
+    <br>
+    </center>
+    <br>
+    </form>
+    <footer>
+        <h1>
+            Thank you for shopping with us!!!
+        </h1>
+    </footer>
+</body>
+
+</html>
