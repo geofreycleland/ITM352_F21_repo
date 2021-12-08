@@ -45,7 +45,16 @@
                         <div class="invoice-title">
                             <div class="row">
                                 <div class="col-xs-12">
-                                    <h2><script>document.write(`Hi ${name}, Thank your for shopping with us!!`);</script><br>
+                                    <h2>
+                                        <script>
+                                            if (params.get("name") == null) {
+                                                console.log(name);
+                                                window.alert("Go back!");
+                                                window.history.go(-1);
+                                            } else {
+                                                document.write(`Hi ${name}, Thank your for shopping with us!!`);
+                                            }
+                                        </script><br>
                                         <span class="small">invoice</span>
                                     </h2>
                                 </div>

@@ -1,0 +1,130 @@
+{ 
+    "Cones":[ 
+        {
+            "product": "Cinnamon Brown Sugar",
+            "price": 1.50,
+            "image": "/cones/Cinnamon+Brown+Suga.png"
+        },
+        {
+            "product": "Dark Chocolate",
+            "price": 1.50,
+            "image": "/cones/Dark+Chocolate.png"
+        },
+        {
+            "product": "French Vanilla",
+            "price": 1.50,
+            "image": "/cones/French+Vanilla.png"
+        },
+        {
+            "product": "Lavender",
+            "price": 1.50,
+            "image": "/cones/Lavender.png"
+        },
+        {
+            "product": "Orange Creamsicle",
+            "price": 1.50,
+            "image": "/cones/Orange+Creamsicle.png"
+        },
+        {
+            "product": "Pink Vanilla",
+            "price": 1.50,
+            "image": "/cones/Pink+Vanilla.png"
+        },
+        {
+            "product": "Red Velvet",
+            "price": 1.50,
+            "image": "/cones/Red+Velvet.png"
+        },
+        {
+            "product": "Salted Blue Corn",
+            "price": 1.50,
+            "image": "/cones/Salted+Blue+Corn.png"
+        }
+    ],
+    "Icecream": [ 
+        {
+            "product": "Birthday Cake",
+            "price": 2.00,
+            "image": "/icecream/Birthday-Cake.jpg"
+        },
+        {
+            "product": "Cookie Dough",
+            "price": 2.00,
+            "image": "/icecream/ChocChipCookieDough-SideScoop-480x480.jpg"
+        },
+        {
+            "product": "Chocolate",
+            "price": 2.00,
+            "image": "/icecream/Chocolate-SideScoop-480x480.jpg"
+        },
+        {
+            "product": "Cookie Monster",
+            "price": 2.00,
+            "image": "/icecream/Cookie-Monster-480x480.jpg"
+        },
+        {
+            "product": "Orange Sherbet",
+            "price": 2.00,
+            "image": "/icecream/OrangeSherbet-SideScoop-480x480.jpg"
+        },
+        {
+            "product": "Raspberry Sherbet",
+            "price": 2.00,
+            "image": "/icecream/RaspberrySherbet-SideScoop-480x480.jpg"
+        },
+        {
+            "product": "Strawberry",
+            "price": 2.00,
+            "image": "/icecream/Strawberry-480x480.jpg"
+        },
+        {
+            "product": "Vanilla",
+            "price": 2.00,
+            "image": "/icecream/Vanilla-SideScoop-480x480.jpg"
+        }
+    ],
+    "Toppings": [
+        {
+            "product": "Marshmellows",
+            "price": 0.50,
+            "image": "/toppings/marshmellow.jpg"
+        },
+        {
+            "product": "Oreos",
+            "price": 0.50,
+            "image": "/toppings/oreo.jpg"
+        },
+        {
+            "product": "Reeses",
+            "price": 0.50,
+            "image": "/toppings/reeses.jpg"
+        },
+        {
+            "product": "Sprinkles",
+            "price": 0.50,
+            "image": "/toppings/sprinkles.jpg"
+        }
+    ],
+    "Sandwiches": [
+        {
+            "product": "Banana Nut Chocolate",
+            "price": 4.00,
+            "image": "/sandwiches/nyes-sandwiches-banana-nut-chocolate.jpg"
+        },
+        {
+            "product": "Blueberry Pie",
+            "price": 4.00,
+            "image": "/sandwiches/nyes-sandwiches-blueberry-pie.jpg"
+        },
+        {
+            "product": "Strawberry Shortcake",
+            "price": 4.00,
+            "image": "/sandwiches/nyes-sandwiches-strawberry-shortcake.jpg"
+        },
+        {
+            "product": "Vanilla Chocolate",
+            "price": 4.00,
+            "image": "/sandwiches/nyes-sandwiches-vanilla-chocolate.jpg"
+        }
+    ]
+}

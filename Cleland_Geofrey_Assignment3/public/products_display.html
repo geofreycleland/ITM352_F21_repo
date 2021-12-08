@@ -1,0 +1,197 @@
+<script src="./navbar.js" type="text/javascript">
+  // This links it to my navbar.js
+</script>
+<script>
+  var products_data;
+  loadJSON('get_products_data', function (response) {
+    // Parsing JSON string into object
+    allproducts = JSON.parse(response);
+  });
+  // Got help from Professor Port & Lab 12 for the following code // 
+  let params = (new URL(document.location)).searchParams; // Get data from form to create invoice
+  var this_product_key = params.get("product_key");
+  var products = allproducts[this_product_key];
+  window.onload = function () {
+    if (params.has('submitPurchase')) { // Check if there is qty data to check
+      // Check if all qty are NonNegInt
+      var haserrors = false;
+      var hasquantities = false;
+      for (i = 0; i < products.length; i++) {
+        if (params.has(`quantity${i}`)) {
+          a_qty = params.get(`quantity${i}`); // Gets data from query string
+          // Data from qty text box and put back into text box (sticky)
+          product_form[`quantity${i}`].value = a_qty;
+          checkQuantityTextbox(product_form[`quantity${i}`]);
+          if (isNonNegInt(a_qty) == false) {
+            haserrors = true;
+          }
+          if (a_qty > 0) {
+            hasquantities = true;
+          }
+        }
+      }
+      // If errors, give alert. If no errors, send to invoice with data.
+      if (haserrors) {
+        alert("Please enter valid quantities."); // If user submits with invalid quantites, alert with reason
+      }
+      else if (hasquantities == false) {
+        alert("Please select a product."); // If user submits with 0 quantites, alert with reason
+      }
+      else {
+        location.href = "./login.html" + location.search; // All good, send to login
+      }
+    }
+  }
+  // Took functions (isNonNegInt & checkQuantityTextbox) from Lab 11 & 12, but adjusted to meet my webpage's requirements
+  function isNonNegInt(q, return_errors = false) { // Checks if the values input are a positive integer
+    errors = []; // Initially assumes there are no errors
+    if (q == '') q = 0; // If the input is "blank", set the value to 0 
+    if (Number(q) != q) errors.push('<font color="red">Not a number!</font>'); // Check if string is a number value. If not, send error with reason.
+    else if (q < 0) errors.push('<font color="red">Negative value!</font>'); // Check if string is non-negative. If not, send error with reason.
+    else if (parseInt(q) != q) errors.push('<font color="red">Not an integer</font>'); // Check that it is an integer. If not, send error with reason.
+    return return_errors ? errors : (errors.length == 0);
+  }
+  function checkQuantityTextbox(theTextbox) { // Checks qty txt box using isNonNegInt function
+    errs = isNonNegInt(theTextbox.value, true); // Calls isNonNegInt function
+    document.getElementById(theTextbox.name + '_label').innerHTML = errs.join(", ");
+  }
+</script>
+<script>
+  // Modified increase & decrease buttons from Mark Broomell https://codepen.io/mtbroomell/pen/yNwwdv then received help from Professor Port to adjust and tweak
+  // Function for increase button to increase quantity
+  function increaseValue(field) {
+    var value = parseInt(product_form[field].value);
+    value = isNaN(value) ? 0 : value;
+    value++; // Increment value by 1
+    product_form[field].value = value; // Set the value
+  }
+
+  // Function for decrease button to decrease quantity
+  function decreaseValue(field) {
+    var value = parseInt(product_form[field].value);
+    value = isNaN(value) ? 0 : value;
+    if (value > 0) { // Will not allow user to decrement value below 0
+      value--;
+    } // Decrement value by 1
+    product_form[field].value = value; // Set the value
+  }
+  // Function to request server to add product at index i to the shopping cart
+  function addtocart(prod_index) {
+    console.log({ "prod_type": this_product_key, "prod_index": prod_index, "prod_qty": product_form[`quantity${prod_index}`].value }); // Get value from textbox
+    (async () => { // Borrowed and modified code https://stackoverflow.com/questions/29775797/fetch-post-json-data
+      const rawResponse = await fetch('./add_to_cart', {
+        method: 'POST',
+        headers: {
+          'Accept': 'application/json',
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({ "prod_type": this_product_key, "prod_index": prod_index, "prod_qty": product_form[`quantity${prod_index}`].value })
+      });
+      const content = await rawResponse.json();
+
+      alert(content["status"]);
+    })();
+  }
+
+  // function to get cookie
+  function getCookie(cname) {
+    var name = cname + "=";
+    var decodedCookie = decodeURIComponent(document.cookie);
+    var ca = decodedCookie.split(';');
+    for (var i = 0; i < ca.length; i++) {
+      var c = ca[i];
+      while (c.charAt(0) == ' ') {
+        c = c.substring(1);
+      }
+      if (c.indexOf(name) == 0) {
+        return c.substring(name.length, c.length);
+      }
+    }
+    return false;
+  }
+</script>
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta brand="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Net Creamery</title>
+  <link rel="stylesheet" href="stylesheets/navbar.css">
+  <link rel="stylesheet" href="stylesheets/products-style.css">
+  </script>
+  <script type="text/javascript">
+    // This calls my Navbar from my navbar.js file
+    navbar();
+  </script>
+</head>
+
+<body>
+  <header>
+    <!-- Header logo & Store name (from w3 css clothing store template)-->
+    <p>
+      <script>
+        if (getCookie('user_info') != false) {
+          var user_info = JSON.parse(getCookie('user_info'));
+          console.log(user_info);
+          document.write(`Welcome, ${user_info["name"]}`); // If the user has a cookie called "user_info", welcome them by name
+        } else {
+          document.write(`User not logged in`); // If the user does not have a cookie called "user_info", display not logged in msg
+        };
+      </script>
+    </p>
+  </header>
+  <!-- Image header (from w3 css clothing store template)-->
+  <div class="imghdr">
+    <img src="images/net creamery Banner.png" alt="KBProducts" width="1516px">
+  </div>
+
+  <!-- Opens up form tag that will be used to collect user input to be submitted and used for their invoice-->
+  <form action="/add_to_cart" name="product_form" method="POST">
+    <div>
+      <main>
+        <script>
+          for (i = 0; i < products.length; i++) {
+            // Retrieved and Modified code from SmartPhoneProducts3, added short caption to each product //
+            document.write(`
+        <section class="item"> 
+        <!-- Load in product image -->
+        <div style="border-style: solid; border-width:2px; border-bottom-style:hidden;"><img src="./images/${products[i].image}"></div>
+        <div style="border-style: solid; border-width:2px;">
+        <!-- Load in product name -->
+        <h2>${products[i].product}</h2>
+        <!-- Load in product price -->
+        <h4>$${(products[i].price).toFixed(2)}</h4>
+        <label><b>Quantity</b></label>
+        <div class="product-actions__quantity"> <!-- modified increase & decrease buttons from Mark Broomell https://codepen.io/mtbroomell/pen/yNwwdv -->
+          <div class="action-qty">
+            <!-- Decrease quantity button -->
+            <span class="button"  onclick="decreaseValue('quantity${i}')">-</span>
+            <!-- Editable textbox for user to be able to type desired quantities -->
+            <input type="text" name="quantity${i}" class="qtytxtbox" value="0" onkeyup="checkQuantityTextbox(this);">
+            <!-- Increase quantity button -->
+            <span class="button"  onclick="increaseValue('quantity${i}')">
+            +</span>
+          </div>
+        </div>
+        <div id="quantity${i}_label"> <!-- Allows computer to know which product actions apply to which products -->
+        </div>
+        <input type="button" onclick="addtocart(${i});" value="Add to cart" name="submitPurchase" class="add_cart">
+        </div>
+        
+        </section>
+        `);
+          }
+        </script>
+      </main>
+    </div>
+  </form>
+  <footer>
+    <!-- Footer with skincare philosophy & estore-->
+    <h2>Make ice cream online.</h2>
+    <h3>or just get an ice cream sandwich.</h3>
+    <h4>It's up to you.</h4>
+  </footer>
+</body>
+
+</html>

@@ -1,0 +1,250 @@
+<script>
+    // Received help from Professor Port & Lab 12 on the following code
+    let params = (new URL(document.location)).searchParams; // Get data from form to create invoice
+
+    // Function to complete purchase
+    function completePurchase() {
+        completePurchasediv.innerHTML = `Thank you for ${user_info["name"]} your purchase`;
+        div = invoiceTableDiv;
+        var scripts = div.getElementsByTagName('script');
+        var i = scripts.length;
+        while (i--) {
+            scripts[i].parentNode.removeChild(scripts[i]);
+        }
+        (async () => { // Borrowed and modified code https://stackoverflow.com/questions/29775797/fetch-post-json-data
+            const rawResponse = await fetch('./completePurchase', {
+                method: 'POST',
+                headers: {
+                    'Accept': 'application/json',
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ "invoicehtml": div.innerHTML })
+            });
+            const content = await rawResponse.json();
+
+            alert(content["status"]);
+        })();
+    }
+
+    // function to get cookie
+    function getCookie(cname) {
+        var name = cname + "=";
+        var decodedCookie = decodeURIComponent(document.cookie);
+        var ca = decodedCookie.split(';');
+        for (var i = 0; i < ca.length; i++) {
+            var c = ca[i];
+            while (c.charAt(0) == ' ') {
+                c = c.substring(1);
+            }
+            if (c.indexOf(name) == 0) {
+                return c.substring(name.length, c.length);
+            }
+        }
+        return false;
+    }
+
+    // Get shopping cart data
+    function loadJSON(service, callback) {
+        var xobj = new XMLHttpRequest();
+        xobj.overrideMimeType("application/json");
+        xobj.open('POST', service, false);
+        xobj.onreadystatechange = function () {
+            if (xobj.readyState == 4 && xobj.status == "200") {
+                // Required use of an anonymous callback as .open will NOT return a value but simply returns undefined in asynchronous mode
+                callback(xobj.responseText);
+            }
+        };
+        xobj.send(null);
+    }
+
+    // Load product data
+    var products_data;
+    loadJSON('get_products_data', function (response) {
+        // Parsing JSON string into object
+        allproducts = JSON.parse(response);
+    });
+</script>
+<script src="./navbar.js" type="text/javascript">
+    // This links it to my navbar.js
+</script>
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="stylesheets/navbar.css">
+    <link rel="stylesheet" href="stylesheets/invoice.css">
+    <title>Net Creamery Cart</title>
+    <script type="text/javascript">
+        // This calls my Navbar from my navbar.js file, Professor Port helped me with this
+        this_product_key = "";
+        navbar();
+    </script>
+</head>
+
+<body>
+    <main>
+        <!-- Took format from Invoice4, but adjusted format according to my liking-->
+        <header>
+            <!-- Header logo & Store name (from w3 css clothing store template)-->
+            <p>
+                <script>
+                    if (getCookie('user_info') != false) {
+                        var user_info = JSON.parse(getCookie('user_info'));
+                        console.log(user_info);
+                        document.write(`Welcome, ${user_info["name"]}`); // If the user has a cookie called "user_info", welcome them by name
+                    } else {
+                        document.write(`User not logged in`); // If the user does not have a cookie called "user_info", display not logged in msg
+                    };
+                </script>
+                <h1>Shopping
+                    Cart</h1>
+            </p>
+        </header>
+        <div id="invoiceTableDiv">
+            <form action="/update_cart" method="POST">
+                <table id="invoicetable">
+                    <tbody>
+                        <tr>
+                            <!-- First row of table, names of columns-->
+                            <th></th>
+                            <th>Product</th>
+                            <th>Quantity</th>
+                            <th>Price</th>
+                            <th>Extended Price</th>
+                        </tr>
+                        <script>
+                            var cart_data;
+                            loadJSON('get_cart', function (response) {
+                                // Parsing JSON string into object
+                                cart_data = JSON.parse(response);
+                            });
+                            console.log(cart_data);
+                            subtotal = 0; // Initially set subtotal to 0
+                            for (prod_key in cart_data) {
+                                products = allproducts[prod_key];
+                                for (i in cart_data[prod_key]) {
+                                    if (cart_data[prod_key][i] > 0) { // If quantities > 0 then perform the expression
+                                        extended_price = cart_data[prod_key][i] * products[i].price;
+                                        subtotal += extended_price; // subtotal = subtotal + extended_price
+                                        // Implement desired quantities with product names & calculate prices and totals according to submitted form
+                                        document.write(` 
+          <tr> 
+            <!-- Load in product image -->
+            <td><img src="./images/${products[i].image}" style="width:120px;height:auto;"></td>
+            <!-- Load in product name -->
+            <td>${products[i].product}</td>
+            <!-- Load in desired product quantity -->
+            <td align="center" width="11%"><input type="text" name="quantities[${prod_key}][${i}]" value="${cart_data[prod_key][i]}" min="0" width="30px"></td>
+            <!-- Load in product price -->
+            <td>\$${products[i].price}</td>
+            <!-- Load in product extended price -->
+            <td>\$${extended_price.toFixed(2)}</td>
+          </tr>
+      `);
+                                    }
+                                }
+                            }
+
+                            // Compute sales tax (Hawaii tax rate)
+                            var tax_rate = 0.0471; // Sets value of tax_rate to 4.71%
+                            var tax = tax_rate * subtotal;
+
+
+                            // Compute shipping
+                            if (subtotal < 20) { // If subtotal is less than $20 or $0-$19.99, calulate $2 shipping
+                                shipping = 2;
+                            }
+                            else if (subtotal <= 50) { // Otherwise, if subtotal is less than or equal to $50 or $20-$50, calulate $5 shipping
+                                shipping = 5;
+                            }
+                            else { // If subtotal is anything other than the above or more than $50, calculate free shipping
+                                shipping = 0;
+                            }
+
+                            // Compute grand total
+                            var total = subtotal + tax + shipping;
+                        </script>
+                        <tr>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td>Sub-total</td>
+                            <td>$
+                                <script>document.write(subtotal.toFixed(2));</script>
+                                <!-- Display calculated subtotal-->
+                            </td>
+                        </tr>
+                        <tr>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td><span>Tax @
+                                    <script>document.write(100 * tax_rate.toFixed(4));</script>%
+                                    <!-- Display tax_rate fixed from 0.0471 to 4.71-->
+                                </span></td>
+                            <td>$
+                                <script>document.write(tax.toFixed(2));</script> <!-- Display calculated Tax-->
+                            </td>
+                        </tr>
+                        <tr>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td><span>Shipping</span></td>
+                            <td>$
+                                <script>document.write(shipping.toFixed(2));</script>
+                                <!-- Display calculated shipping rate-->
+                            </td>
+                        </tr>
+                        <tr>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td><strong>Total</strong></td>
+                            <td><strong>$
+                                    <script>document.write(total.toFixed(2));</script>
+                                    <!-- Display calculated final total-->
+                                </strong></td>
+                        </tr>
+                    </tbody>
+                </table>
+        </div>
+        <p><input type="submit" value="Update Cart"></p>
+        </form>
+        <br>
+
+</body>
+<footer>
+    <script>
+        if (getCookie("user_info") != false) // User has username cookie (logged in)
+        {
+            document.write(`
+        <div id="completePurchasediv" class="completePurchasediv">
+        <input type="button" onclick="completePurchase();" value="Complete Purchase" style="font-family: 'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif;, text-align: center;" >
+        </div>`);
+        } else { // User does not have username cookie (not logged in)
+            document.write(`
+        <div>
+        <input type="button" onclick="location.href='./login.html';" value="Login to Complete Purchase" style="font-family: 'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif;, text-align: center;" >
+        </div>`);
+        }
+    </script>
+    </main>
+    <hr class="w3-border-grey" style="margin:auto;width:40%">
+    <!-- horizontal line from w3 css clothing store template -->
+    <div class="policy"><br><b>
+            OUR SHIPPING POLICY IS: <br> <!-- Format initially taken from Invoice 4, but adjusted to my liking-->
+            A subtotal $19.99 or less will be $2 shipping <br>
+            A subtotal $20 - $49.99 will be $5 shipping <br>
+            Subtotals over $50 will qualify for FREE shipping!</b>
+    </div>
+</footer>
+
+</html>
+<script>
+    if (params.has("msg")) {
+        alert(params.get("msg"));
+    }
+</script>

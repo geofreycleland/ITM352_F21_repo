@@ -1,0 +1,132 @@
+.completePurchasediv {
+    width: 100%;
+    padding: 12px 20px;
+    margin: 8px 0;
+    display: inline-block;
+    text-align: center;
+    font-family:'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif;
+  }
+  
+  input {
+  text-align: center;
+    margin-left: auto;
+    margin-right: auto;
+  }
+  
+  /* Shipping Policy */
+  .policy {
+    margin-left: auto;
+    margin-right: auto;
+    text-align: center;
+    border: hidden;
+    font-family:'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif;
+  }
+  
+  /* Table for invoice */
+  table {
+    background-color: rgba(255, 255, 255, 0.925);
+    text-align: center;
+    margin-left: auto;
+    margin-right: auto;
+    font-family:'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif;
+  }
+  /* Image/Text Header */
+  .hdrtxt {
+    background-color: rgba(255, 255, 255, 0.925);
+  }
+  
+  /* Quantity text box */
+  .qtytxtbox {
+    text-align: center;
+    border-left: 1px;
+    border-right: 1px;
+    background-color: rgba(255, 255, 255, 0.37);
+  }
+  
+  /* Total Items */
+  .totalitms {
+    border-style: hidden;
+  }
+
+  /* Typography */   
+  h1,h2,h3,h4 {
+      text-align: center;
+      font-family:'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif;
+  
+  }
+  
+  /* Form styling */
+  main {
+    width: 800px;
+    margin: 0 auto;
+  }
+  
+  body{
+    margin: 0 auto;
+    background-color: #fff6ea;
+  }
+
+  /* Styling the products display */
+  .item img {
+      width: 300px;
+      height: auto;
+  }
+  
+  /* Shadow when user hovers over item */
+  .item:hover {
+    box-shadow: 0 0 5px 1px black;
+  }
+  
+  
+  /* Styling the increase and decrease buttons */
+  /* Styling increase & decrease buttons from Mark Broomell https://codepen.io/mtbroomell/pen/yNwwdv */
+    .value-button {
+      display: inline-block;
+      border: 1px solid #ddd;
+      margin: 0px;
+      width: 40px;
+      height: 20px;
+      text-align: center;
+      vertical-align: middle;
+      padding: 11px 0;
+      background: #eee;
+    }
+  
+    /* Style the various products */
+    section {
+      width: 300%;
+      background-color: white;
+      height: auto;
+    }
+  
+    input[type=button] {
+      width: 100%;
+      padding: 12px 20px;
+      margin: 8px 0;
+      display: inline-block;
+      border: 1px solid #ccc;
+      box-sizing: border-box;
+      font-family:'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif;
+      background-color: #ffbd59;
+    }
+  
+    input[type=submit] { 
+      width: 25%;
+      padding: 12px 20px;
+      margin: 8px 0;
+      float: right;
+      border: 1px solid #ccc;
+      box-sizing: border-box;
+      font-family:'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif;
+      background-color: rgb(212, 180, 150);
+    }
+  
+    button:hover {
+      opacity: 0.8;
+    }
+
+    p {
+        text-align:right;
+        padding-right:50px;
+        background-color: #fff6ea;
+    }
