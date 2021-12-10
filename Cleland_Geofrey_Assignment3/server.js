@@ -43,19 +43,17 @@ app.post("/get_products_data", function (request, response, next) {
 // ------ Load In Product Data ----- //
 
 // ------ Process Login Form ----- //
-// Followed Professor Port's Screencast + Borrowed and modified code from Alyssa Mencel assignment 2 code https://github.com/amencel/ITM352_F20_repo/tree/master/mencel_alyssa_assignment2
-// Got help from Professor Port during office hours
 app.post('/process_login', function (request, response, next) {
     delete request.query.username_error; // Deletes error from query after fixed
     delete request.query.password_error; // Deletes error from query after fixed
-    username = request.body.username.toLowerCase(); // Username as all lower case
+    let username = request.body["username"];
     if (typeof user_data[username] != 'undefined') { // Check if username entered exists in user data
         if (user_data[username].password == request.body.psw) { // Check if password entered matches password in user data
             request.query.name = user_data[username].name;
             request.query.email = user_data[username].email;
             response_string = `<script>
             alert('${user_data[username].name} Login Successful!');
-            location.href = "${'./invoice.html?' + qs.stringify(request.query)}";
+            location.href = "${'./products_display.html'}";
             </script>`;
             var user_info = {"username": username, "name": user_data[username].name, "email": user_data[username].email};
             response.cookie('user_info', JSON.stringify(user_info), { maxAge: 30 * 60 * 1000 });
@@ -168,7 +166,6 @@ app.post('/cart_qty', function (request, response) {
 // ------ Get cart qty ----- //
 
 // ------ Process order from products_display ----- //
-// Got help from Professor Port during office hours
 app.post('/add_to_cart', function (request, response) {
     let POST = request.body; // create variable for the data entered into products_display
     var qty = POST["prod_qty"];
@@ -241,14 +238,15 @@ app.post('/completePurchase', function (request, response) {
         }
     });
     var mailOptions = {
-        from: 'kimkb@krave.com',
+        from: 'admin@netcreamery.com',
         to: the_email,
-        subject: 'Your Krave Beauty Invoice',
+        subject: 'Your Net Creamery Invoice',
         html: invoice.invoicehtml
     };
     transporter.sendMail(mailOptions, function (error, info) {
         if (error) {
-            status_str = 'There was an error and your invoice could not be emailed :(';
+            status_str = 'There was an error and your invoice could not be emailed';
+            console.log(error); 
         } else {
             status_str = `Your invoice was mailed to ${the_email}`;
         }

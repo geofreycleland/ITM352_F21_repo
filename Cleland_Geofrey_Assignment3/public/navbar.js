@@ -30,9 +30,33 @@ function navbar() {
     }
     document.write(` 
         <li id="right"><a href="./invoice.html${location.search}">Shopping Cart(${cart_qty.qty})</a></li>
-        <li id="right"><a href="./logout">Logout</a></li>
-        <li id="right"><a href="./register.html${location.search}">Registration</a></li>
-        <li id="right"><a href="./login.html${location.search}">Login</a></li>     
-    </ul>
-    `);
+        
+        <li id="right"><a href="./register.html${location.search}">Registration</a></li>`);
+
+        if (getCookie('user_info') != false) {
+          var user_info = JSON.parse(getCookie('user_info'));
+          console.log(user_info);
+          document.write(`<li id="right"><a href="./logout">Logout</a></li>`);
+        } else {
+          document.write(`<li id="right"><a href="./login.html${location.search}">Login</a></li>`); 
+        };
+             
+        document.write(`</ul>`);
 }
+
+// function to get cookie
+function getCookie(cname) {
+    var name = cname + "=";
+    var decodedCookie = decodeURIComponent(document.cookie);
+    var ca = decodedCookie.split(';');
+    for (var i = 0; i < ca.length; i++) {
+      var c = ca[i];
+      while (c.charAt(0) == ' ') {
+        c = c.substring(1);
+      }
+      if (c.indexOf(name) == 0) {
+        return c.substring(name.length, c.length);
+      }
+    }
+    return false;
+  }

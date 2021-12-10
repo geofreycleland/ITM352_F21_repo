@@ -15,8 +15,8 @@
         "email": "itm352@hawaii.edu"
     },
     "gcleland": {
-        "password": "cleland",
-        "email": "gcleland@hawaii.edu",
-        "name": "Geofrey Cleland"
+        "name": "Geofrey Cleland",
+        "password": "cleland",      
+        "email": "gcleland@hawaii.edu"
     }
 }

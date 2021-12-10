@@ -1,0 +1,111 @@
+<script src="./navbar.js" type="text/javascript">
+    // This links it to my navbar.js
+</script>
+<script>
+    var products_data;
+    loadJSON('get_products_data', function (response) {
+        // Parsing JSON string into object
+        allproducts = JSON.parse(response);
+    });
+    // Got help from Professor Port & Lab 12 for the following code // 
+    let params = (new URL(document.location)).searchParams; // Get data from form to create invoice
+    var this_product_key = params.get("product_key");
+    var products = allproducts[this_product_key];
+</script>
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <link rel="stylesheet" href="stylesheets/register.css">
+    <link rel="stylesheet" href="stylesheets/navbar.css">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Register Page</title>
+    <script type="text/javascript">
+        // This calls my Navbar from my navbar.js file, Professor Port helped me with this
+        navbar();
+    </script>
+    <hr class="w3-border-grey" style="margin:auto;width:40%">
+</head>
+
+<body>
+    <main>
+        <script>
+            document.write(`
+    <form action="process_register${location.search}" method="post">`);
+        </script>
+        <div class="container">
+            <h1 style="text-align: center;">Register</h1>
+            <p style="text-align: center;">Please fill in the information below to create an account.</p>
+            <hr class="w3-border-grey" style="margin:auto;width:40%">
+            <hr>
+            <label for="fullname"><b>Enter First and Last Name</b></label>
+            <span id="name_msg" style="color: red;"></span>
+            <input type="text" placeholder="Enter Full Name" name="fullname" id="fullname" required>
+
+            <label for="username"><b>Username</b></label>
+            <span id="username_msg" style="color: red;"></span>
+            <input type="text" placeholder="Enter Username" name="username" id="username" required>
+
+            <label for="email"><b>Email</b></label>
+            <span id="email_msg" style="color: red;"></span>
+            <input type="text" placeholder="Enter Email" name="email" id="email" required>
+
+            <label for="password"><b>Password</b></label>
+            <span id="password_msg" style="color: red;"></span>
+            <input type="password" placeholder="Enter Password" name="password" id="password" required>
+
+            <label for="repeat_password"><b>Repeat Password</b></label>
+            <span id="repeat_password_msg" style="color: red;"></span>
+            <input type="password" placeholder="Repeat Password" name="repeat_password" id="repeat_password" required>
+            <hr>
+
+            <button type="submit" class="registerbtn">REGISTER</button>
+        </div>
+
+        <div class="container signin">
+            <script>
+                // If already a member, sign in
+                document.write(`<p>Already have a login? <a href="./login.html${location.search}">Sign in here</a>.</p>`);
+            </script>
+        </div>
+        </form>
+    </main>
+</body>
+
+</html>
+<script>
+    if (params.has('errors')) {
+        fullname.value = params.get('fullname'); // Sticky name
+        username.value = params.get('username'); // Sticky username
+        email.value = params.get('email'); // Sticky email
+        var errors = params.get('errors').split(';');
+        for (error_msg of errors) {
+            if (error_msg == 'Username taken') {
+                username_msg.innerHTML = error_msg;
+            }
+            if (error_msg == 'Only letter characters allowed for Full Name') {
+                name_msg.innerHTML = error_msg;
+            }
+            if (error_msg == 'Full Name must contain Maximum 30 Characters') {
+                name_msg.innerHTML = error_msg;
+            }
+            if (error_msg == 'Username must contain at least 4 characters and a maximum of 10 characters') {
+                username_msg.innerHTML = error_msg;
+            }
+            if (error_msg == 'Only Letters And Numbers Allowed for Username') {
+                username_msg.innerHTML = error_msg;
+            }
+            if (error_msg == 'Must enter a valid email (username@mailserver.domain).') {
+                email_msg.innerHTML = error_msg;
+            }
+            if (error_msg == 'Password Minimum 6 Characters') {
+                password_msg.innerHTML = error_msg;
+            }
+            if (error_msg == 'Passwords Do Not Match') {
+                repeat_password_msg.innerHTML = error_msg;
+            }
+        };
+        alert('Please fix the following error(s):\n' + errors.join('\n')); // If there are any of these error messages, alert and show error next to area of error
+    }
+</script>
