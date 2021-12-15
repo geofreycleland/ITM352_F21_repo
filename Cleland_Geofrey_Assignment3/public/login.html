@@ -1,5 +1,12 @@
+<script>
+    /**
+    * An e-Commerce Web-site using a server and templates.
+    * @author Geofrey Cleland
+    * @since 12/5/2021
+    */
+</script>
 <script src="./navbar.js" type="text/javascript">
-    // This links it to my navbar.js
+    // links navbar.js
 </script>
 <script>
     var products_data;
@@ -7,7 +14,6 @@
         // Parsing JSON string into object
         allproducts = JSON.parse(response);
     });
-    // Got help from Professor Port & Lab 12 for the following code // 
     let params = (new URL(document.location)).searchParams; // Get data from form to create invoice
     var this_product_key = params.get("product_key");
     var products = allproducts[this_product_key];
@@ -21,20 +27,22 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Login Page</title>
-    <script type="text/javascript">
-        // This calls my Navbar from my navbar.js file, Professor Port helped me with this
-        navbar();
-    </script>
+    <!-- Kit Code for Icons -->
+    <script src="https://kit.fontawesome.com/818677a666.js" crossorigin="anonymous"></script>
+
 </head>
 
 <body>
+    <script type="text/javascript">
+        // calls Navbar from navbar.js file
+        navbar();
+    </script>
     <main>
         <script>
             document.write(`
     <form action="process_login${location.search}" method="post">`);
         </script>
         <div class="imgcontainer">
-            <!--<img src="./images/allproducts.jpeg" alt="Avatar" class="avatar">-->
         </div>
         <h1 style="text-align: center;">Login</h1>
         <p style="text-align: center;">Please enter your username and password.</p>

@@ -4,14 +4,16 @@ ul {
     padding: 0px 0px;
     overflow: hidden;
     background-color: #fff6ea;
-    position: sticky; /* navbar remains in place when scrolling up & down the page */
+    position: fixed; /* navbar remains in place when scrolling up & down the page */
     top: 0;
     width: 100%;
-    font-family:'Futura' 'Trebuchet MS', Arial, sans-serif;
+    border-bottom: 1px solid black;
+    font-family:'Futura', 'Trebuchet MS', Arial, sans-serif;
 }
 li {
     padding-right: 50px;
     float: left;
+    padding: 5px 0px;
 }
 li a {
     display: block;
@@ -19,14 +21,11 @@ li a {
     font-size: 14pt;
     text-align: center;
     text-decoration: none;
-    padding: 5px 5px;
+    padding: 0px 20px;
 }
 li a:hover:not(.active) {
     background-color: #fff6ea;
 }
-.active {
-    background-color: #fff6ea;
-    }
 #right {
     float: right
 }    
@@ -34,5 +33,13 @@ li a:hover:not(.active) {
     float: left;
     width: 90px;
   }
+  body {
+    margin: 0;
+  }
 
+i {
+    color: #7d4218;
+    font-size: 14pt;
+    font-family:'Futura', 'Trebuchet MS', Arial, sans-serif;
+}
   

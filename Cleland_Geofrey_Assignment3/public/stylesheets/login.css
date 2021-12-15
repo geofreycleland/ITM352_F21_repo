@@ -4,7 +4,7 @@ head {
 }
 
 body {
-    margin: 0 auto;
+    margin-top: 90px;
     }
 
 main {
@@ -30,7 +30,7 @@ main {
     
     /* Set a style for all buttons */
     button {
-      background-color: rgb(145, 245, 145);
+      background-color: #ffbd59;
       color: rgb(0, 0, 0);
       padding: 14px 20px;
       margin: 8px 0;
@@ -43,8 +43,6 @@ main {
     button:hover {
       opacity: 0.8;
     }
-    
-  
     
     /* Center the avatar image inside this container */
     .imgcontainer {

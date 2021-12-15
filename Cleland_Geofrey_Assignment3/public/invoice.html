@@ -1,17 +1,23 @@
 <script>
-    // Received help from Professor Port & Lab 12 on the following code
+    /**
+    * An e-Commerce Web-site using a server and templates.
+    * @author Geofrey Cleland
+    * @since 12/5/2021
+    */
+</script>
+<script>
     let params = (new URL(document.location)).searchParams; // Get data from form to create invoice
 
-    // Function to complete purchase
+    //++++++++++Function to complete purchase++++++++++//
     function completePurchase() {
-        completePurchasediv.innerHTML = `Thank you for ${user_info["name"]} your purchase`;
+        completePurchasediv.innerHTML = `Thank you ${user_info["name"]} for your purchase`;
         div = invoiceTableDiv;
         var scripts = div.getElementsByTagName('script');
         var i = scripts.length;
         while (i--) {
             scripts[i].parentNode.removeChild(scripts[i]);
         }
-        (async () => { // Borrowed and modified code https://stackoverflow.com/questions/29775797/fetch-post-json-data
+        (async () => {
             const rawResponse = await fetch('./completePurchase', {
                 method: 'POST',
                 headers: {
@@ -21,12 +27,13 @@
                 body: JSON.stringify({ "invoicehtml": div.innerHTML })
             });
             const content = await rawResponse.json();
-
+            setTimeout("location.href = './logout';", 5000);
             alert(content["status"]);
+
         })();
     }
 
-    // function to get cookie
+    //++++++++++function to get cookie++++++++++//
     function getCookie(cname) {
         var name = cname + "=";
         var decodedCookie = decodeURIComponent(document.cookie);
@@ -43,7 +50,7 @@
         return false;
     }
 
-    // Get shopping cart data
+    //++++++++++Get shopping cart data++++++++++//
     function loadJSON(service, callback) {
         var xobj = new XMLHttpRequest();
         xobj.overrideMimeType("application/json");
@@ -57,7 +64,7 @@
         xobj.send(null);
     }
 
-    // Load product data
+    //++++++++++Load product data++++++++++//
     var products_data;
     loadJSON('get_products_data', function (response) {
         // Parsing JSON string into object
@@ -65,7 +72,7 @@
     });
 </script>
 <script src="./navbar.js" type="text/javascript">
-    // This links it to my navbar.js
+    // links navbar.js
 </script>
 <!DOCTYPE html>
 <html lang="en">
@@ -76,30 +83,25 @@
     <link rel="stylesheet" href="stylesheets/navbar.css">
     <link rel="stylesheet" href="stylesheets/invoice.css">
     <title>Net Creamery Cart</title>
-    <script type="text/javascript">
-        // This calls my Navbar from my navbar.js file, Professor Port helped me with this
-        this_product_key = "";
-        navbar();
-    </script>
+    <!-- Kit Code for Icons -->
+    <script src="https://kit.fontawesome.com/818677a666.js" crossorigin="anonymous"></script>
+
 </head>
 
 <body>
+    <script type="text/javascript">
+        // calls Navbar from navbar.js
+        this_product_key = "";
+        navbar();
+    </script>
     <main>
-        <!-- Took format from Invoice4, but adjusted format according to my liking-->
         <header>
-            <!-- Header logo & Store name (from w3 css clothing store template)-->
+            <script>
+                var user_info = JSON.parse(getCookie('user_info'));
+            </script>
             <p>
-                <script>
-                    if (getCookie('user_info') != false) {
-                        var user_info = JSON.parse(getCookie('user_info'));
-                        console.log(user_info);
-                        document.write(`Welcome, ${user_info["name"]}`); // If the user has a cookie called "user_info", welcome them by name
-                    } else {
-                        document.write(`User not logged in`); // If the user does not have a cookie called "user_info", display not logged in msg
-                    };
-                </script>
-                <h1>Shopping
-                    Cart</h1>
+            <h1>Shopping
+                Cart</h1>
             </p>
         </header>
         <div id="invoiceTableDiv">
@@ -121,14 +123,17 @@
                                 cart_data = JSON.parse(response);
                             });
                             console.log(cart_data);
+                            if (Object.keys(cart_data) == 0) {
+                                alert("Empty Cart");
+                                location.href = "./products_display.html" + location.search;
+                            }
                             subtotal = 0; // Initially set subtotal to 0
                             for (prod_key in cart_data) {
                                 products = allproducts[prod_key];
                                 for (i in cart_data[prod_key]) {
-                                    if (cart_data[prod_key][i] > 0) { // If quantities > 0 then perform the expression
+                                    if (cart_data[prod_key][i] > 0) { // If quantities > 0 calculate exteneded price and subtotal
                                         extended_price = cart_data[prod_key][i] * products[i].price;
                                         subtotal += extended_price; // subtotal = subtotal + extended_price
-                                        // Implement desired quantities with product names & calculate prices and totals according to submitted form
                                         document.write(` 
           <tr> 
             <!-- Load in product image -->
@@ -146,7 +151,6 @@
                                     }
                                 }
                             }
-
                             // Compute sales tax (Hawaii tax rate)
                             var tax_rate = 0.0471; // Sets value of tax_rate to 4.71%
                             var tax = tax_rate * subtotal;
@@ -154,10 +158,10 @@
 
                             // Compute shipping
                             if (subtotal < 20) { // If subtotal is less than $20 or $0-$19.99, calulate $2 shipping
-                                shipping = 2;
+                                shipping = 1;
                             }
                             else if (subtotal <= 50) { // Otherwise, if subtotal is less than or equal to $50 or $20-$50, calulate $5 shipping
-                                shipping = 5;
+                                shipping = 3;
                             }
                             else { // If subtotal is anything other than the above or more than $50, calculate free shipping
                                 shipping = 0;
@@ -235,9 +239,9 @@
     <hr class="w3-border-grey" style="margin:auto;width:40%">
     <!-- horizontal line from w3 css clothing store template -->
     <div class="policy"><br><b>
-            OUR SHIPPING POLICY IS: <br> <!-- Format initially taken from Invoice 4, but adjusted to my liking-->
-            A subtotal $19.99 or less will be $2 shipping <br>
-            A subtotal $20 - $49.99 will be $5 shipping <br>
+            OUR SHIPPING POLICY IS: <br>
+            A subtotal $19.99 or less will be $1 shipping <br>
+            A subtotal $20 - $49.99 will be $3 shipping <br>
             Subtotals over $50 will qualify for FREE shipping!</b>
     </div>
 </footer>

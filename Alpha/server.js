@@ -1,97 +1,209 @@
-//*
-//*
-//*Project: Assignemnt1
-//*ITM352
-//*Author: Qiyan Lin
-//*Professor: Den Port
-//*This code mean to be programming a server for Assignemnt2
-var express = require('express');
-var app = express();
-var myParser = require("body-parser"); 
-app.use(myParser.urlencoded({ extended: true }));
-var qs = require('qs');
-var fs = require('fs');
+// ************************************************
+// Shopping Cart API
+// ************************************************
 
-var user_data_file = './user_data.json';
-if(fs.statSync(user_data_file)){
-    var file_stats = fs.statSync(user_data_file);
-    var user_data = JSON.parse(fs.readFileSync('./user_data.json', 'utf-8'));
-}else{
-    console.log(`${user_data_file} does not exist!`);
-}
-
-app.all('*', function(request, response, next){
-    console.log(request.method + ' to ' + request.path);
-    next();
-});
-
-//*Registration process
-//*Add a new user to the user_data.json
-app.post('/process_register', function(request, response){
-    username = request.body["uname"];
-    //get the username from the uname of the body
-    console.log(request.query);
-    //create a variable of username_enter
-    let username_entered = request.body["uname"];
-    //use a if function to check if the username is good
-    if(typeof user_data[username_entered] != 'undefined'){
-        //Need to prove this is undefined so the username is not exit on the user_data.json
-        response.send(`${username_entered} has been used, please try again`);
-    }else{
-        //using the vaiable to get user's input
-        user_data[username] = {};
-        user_data[username]["password"] = request.body["psw"];
-        user_data[username]["email"] = request.body["email"];
-        user_data[username]["name"] = request.body["fullname"];
-        //save the user_data to the user_data.json
-        //reverse the readFileSync, and convert the new user data to JSON
-        fs.writeFileSync(user_data_file, JSON.stringify(user_data));
-        request.query["name"] = request.body["fullname"];
-        request.query["email"] = request.body["email"];
-        response.redirect('products_display.html?' + display_invoice());
+var shoppingCart = (function() {
+    // =============================
+    // Private methods and propeties
+    // =============================
+    cart = [];
+    
+    // Constructor
+    function Item(name, price, count) {
+      this.name = name;
+      this.price = price;
+      this.count = count;
     }
     
+    // Save cart
+    function saveCart() {
+      sessionStorage.setItem('shoppingCart', JSON.stringify(cart));
+    }
     
-});
-//*Login process
-app.post('/process_login', function (request, response, next) {
-    console.log(request.query);
-    //check login and password match the database
-    let username_entered = request.body["uname"];
-    let password_entered = request.body["psw"];
-    //When the user username is defined,
-    if(typeof user_data[username_entered] != 'undefined'){
-        //When the password match with the user_data.json, logged in
-        //Invoice will be present when the user logged in
-        if(user_data[username_entered]['password'] == password_entered){
-            response.redirect(display_invoice() + qs.stringify(request.query));
-            //response.send(`${username_entered} is logged in!!!`);//Do I need this??????   
-    }else{
-        //When the passward does not match with the user_data.json, send the password is wrong
-        response.send(`${username_entered} password wrong`);
-        
+      // Load cart
+    function loadCart() {
+      cart = JSON.parse(sessionStorage.getItem('shoppingCart'));
+    }
+    if (sessionStorage.getItem("shoppingCart") != null) {
+      loadCart();
+    }
+    
+  
+    // =============================
+    // Public methods and propeties
+    // =============================
+    var obj = {};
+    
+    // Add to cart
+    obj.addItemToCart = function(name, price, count) {
+      for(var item in cart) {
+        if(cart[item].name === name) {
+          cart[item].count ++;
+          saveCart();
+          return;
         }
+      }
+      var item = new Item(name, price, count);
+      cart.push(item);
+      saveCart();
     }
-    else{
-        //When the username is not defined, send the user is not found.
-        //refer to the line37
-        response.send(`${username_entered} not found`);
-    }      
-});
-
-//*Registration process
-//Deploy a micor service to check if the username exist on the user input
-app.post('/check_user', function (request, response, next) {
-    if(typeof user_data[request.query["username"]] != 'undefined'){
-        //if the usename exist in the user.json
-        response.json({"username_exist": true});
-    }else{
-         //if the usename not exist in the user.json
-        response.json({"username_exist": false});
+    // Set count from item
+    obj.setCountForItem = function(name, count) {
+      for(var i in cart) {
+        if (cart[i].name === name) {
+          cart[i].count = count;
+          break;
+        }
+      }
+    };
+    // Remove item from cart
+    obj.removeItemFromCart = function(name) {
+        for(var item in cart) {
+          if(cart[item].name === name) {
+            cart[item].count --;
+            if(cart[item].count === 0) {
+              cart.splice(item, 1);
+            }
+            break;
+          }
+      }
+      saveCart();
     }
-});
-
-app.use(express.static('./static'));
-
-var listener = app.listen(8080, () => { console.log('server started listening on port ' + listener.address().port)});
+  
+    // Remove all items from cart
+    obj.removeItemFromCartAll = function(name) {
+      for(var item in cart) {
+        if(cart[item].name === name) {
+          cart.splice(item, 1);
+          break;
+        }
+      }
+      saveCart();
+    }
+  
+    // Clear cart
+    obj.clearCart = function() {
+      cart = [];
+      saveCart();
+    }
+  
+    // Count cart 
+    obj.totalCount = function() {
+      var totalCount = 0;
+      for(var item in cart) {
+        totalCount += cart[item].count;
+      }
+      return totalCount;
+    }
+  
+    // Total cart
+    obj.totalCart = function() {
+      var totalCart = 0;
+      for(var item in cart) {
+        totalCart += cart[item].price * cart[item].count;
+      }
+      return Number(totalCart.toFixed(2));
+    }
+  
+    // List cart
+    obj.listCart = function() {
+      var cartCopy = [];
+      for(i in cart) {
+        item = cart[i];
+        itemCopy = {};
+        for(p in item) {
+          itemCopy[p] = item[p];
+  
+        }
+        itemCopy.total = Number(item.price * item.count).toFixed(2);
+        cartCopy.push(itemCopy)
+      }
+      return cartCopy;
+    }
+  
+    // cart : Array
+    // Item : Object/Class
+    // addItemToCart : Function
+    // removeItemFromCart : Function
+    // removeItemFromCartAll : Function
+    // clearCart : Function
+    // countCart : Function
+    // totalCart : Function
+    // listCart : Function
+    // saveCart : Function
+    // loadCart : Function
+    return obj;
+  })();
+  
+  
+  // *****************************************
+  // Triggers / Events
+  // ***************************************** 
+  // Add item
+  $('.add-to-cart').click(function(event) {
+    event.preventDefault();
+    var name = $(this).data('name');
+    var price = Number($(this).data('price'));
+    shoppingCart.addItemToCart(name, price, 1);
+    displayCart();
+  });
+  
+  // Clear items
+  $('.clear-cart').click(function() {
+    shoppingCart.clearCart();
+    displayCart();
+  });
+  
+  
+  function displayCart() {
+    var cartArray = shoppingCart.listCart();
+    var output = "";
+    for(var i in cartArray) {
+      output += "<tr>"
+        + "<td>" + cartArray[i].name + "</td>" 
+        + "<td>(" + cartArray[i].price + ")</td>"
+        + "<td><div class='input-group'><button class='minus-item input-group-addon btn btn-primary' data-name=" + cartArray[i].name + ">-</button>"
+        + "<input type='number' class='item-count form-control' data-name='" + cartArray[i].name + "' value='" + cartArray[i].count + "'>"
+        + "<button class='plus-item btn btn-primary input-group-addon' data-name=" + cartArray[i].name + ">+</button></div></td>"
+        + "<td><button class='delete-item btn btn-danger' data-name=" + cartArray[i].name + ">X</button></td>"
+        + " = " 
+        + "<td>" + cartArray[i].total + "</td>" 
+        +  "</tr>";
+    }
+    $('.show-cart').html(output);
+    $('.total-cart').html(shoppingCart.totalCart());
+    $('.total-count').html(shoppingCart.totalCount());
+  }
+  
+  // Delete item button
+  
+  $('.show-cart').on("click", ".delete-item", function(event) {
+    var name = $(this).data('name')
+    shoppingCart.removeItemFromCartAll(name);
+    displayCart();
+  })
+  
+  
+  // -1
+  $('.show-cart').on("click", ".minus-item", function(event) {
+    var name = $(this).data('name')
+    shoppingCart.removeItemFromCart(name);
+    displayCart();
+  })
+  // +1
+  $('.show-cart').on("click", ".plus-item", function(event) {
+    var name = $(this).data('name')
+    shoppingCart.addItemToCart(name);
+    displayCart();
+  })
+  
+  // Item count input
+  $('.show-cart').on("change", ".item-count", function(event) {
+     var name = $(this).data('name');
+     var count = Number($(this).val());
+    shoppingCart.setCountForItem(name, count);
+    displayCart();
+  });
+  
+  displayCart();
 

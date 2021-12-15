@@ -9,7 +9,7 @@
     margin-right: auto;
     text-align: center;
     border: hidden;
-    font-family:'Futura' 'Trebuchet MS', Arial, sans-serif;
+    font-family:'Futura', 'Trebuchet MS', Arial, sans-serif;
   }
   
   /* Table for invoice */
@@ -18,7 +18,7 @@
     text-align: center;
     margin-left: auto;
     margin-right: auto;
-    font-family:'Futura' 'Trebuchet MS', Arial, sans-serif;
+    font-family:'Futura', 'Trebuchet MS', Arial, sans-serif;
   }
   /* Image/Text Header */
   .hdrtxt {
@@ -46,14 +46,14 @@
   }
   /* General */
   body {
-      margin: 0 auto;
+      margin-top: 76px;
       background-color: #fff6ea;
   }
   /* Typography */   
   h1,h2,h3,h4 {
       color: #7d4218;
       text-align: center;
-      font-family:'Futura' 'Trebuchet MS', Arial, sans-serif;
+      font-family:'Futura', 'Trebuchet MS', Arial, sans-serif;
   }
 
   /* Styling the products display */
@@ -68,12 +68,13 @@
       display: inline-block;
       border: 1px solid #ddd;
       margin: 0px;
-      width: 40px;
+      width: 20px;
       height: 20px;
       text-align: center;
       vertical-align: middle;
-      padding: 11px 0px;
-      background: #eee;
+      padding: 0px 0px;
+      background: #fff6ea;
+      cursor: pointer;
     }
 
     p {
@@ -100,4 +101,10 @@
   /* Styling the form */
 form {
     text-align: center;
+  }
+
+  .add_cart {
+    background-color: #ffbd59;
+    padding: 10px;
+    margin-bottom: 10px;
   }

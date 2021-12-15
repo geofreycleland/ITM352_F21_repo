@@ -4,7 +4,7 @@ head {
 }
 
 body {
-    margin: 0 auto;
+    margin-top: 90px;
     }
 
 main {
@@ -43,7 +43,7 @@ main {
   
   /* Set a style for the submit/register button */
   .registerbtn {
-    background-color: rgb(145, 245, 145);
+    background-color: #ffbd59;
     color: BLACK;
     padding: 16px 20px;
     margin: 8px 0;
